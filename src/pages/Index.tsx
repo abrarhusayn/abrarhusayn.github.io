@@ -148,7 +148,22 @@ const Index = () => {
           </TerminalSection>
         )}
 
-        {/* Skills Section */}
+        {/* Projects Section */}
+        {visibleSections.includes("projects") && (
+          <TerminalSection command="ls -la ~/projects" delay={500}>
+            <div className="grid gap-4">
+              {projects.map((project, index) => (
+                <ProjectCard
+                  key={project.title}
+                  {...project}
+                  delay={600 + index * 150}
+                />
+              ))}
+            </div>
+          </TerminalSection>
+        )}
+
+           {/* Skills Section */}
         {visibleSections.includes("skills") && (
           <TerminalSection command="./skills --verbose" delay={300}>
             <div className="overflow-x-auto">
@@ -164,20 +179,6 @@ const Index = () => {
           </TerminalSection>
         )}
 
-        {/* Projects Section */}
-        {visibleSections.includes("projects") && (
-          <TerminalSection command="ls -la ~/projects" delay={500}>
-            <div className="grid gap-4">
-              {projects.map((project, index) => (
-                <ProjectCard
-                  key={project.title}
-                  {...project}
-                  delay={600 + index * 150}
-                />
-              ))}
-            </div>
-          </TerminalSection>
-        )}
 
         {/* Contact Section */}
         {visibleSections.includes("contact") && (
