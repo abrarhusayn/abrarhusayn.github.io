@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -35,6 +36,20 @@ export default function RootLayout({
         <link rel="icon" type="image/svg+xml" href="/logo.svg" />
       </head>
       <body className="min-h-screen w-full bg-black text-[#f5f5f5] antialiased relative selection:bg-white selection:text-black">
+        {/* Google Analytics (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-YT1SC9NEFL"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-YT1SC9NEFL');
+          `}
+        </Script>
+
         {/* Ambient Top Light Beam */}
         <div className="linear-glow" />
         <div className="fixed inset-0 linear-grid pointer-events-none -z-10" />
