@@ -1,5 +1,12 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: "Abrar (@abrarhusayn) — Full-Stack Engineer",
@@ -23,16 +30,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" className="dark scroll-smooth w-full">
       <head>
         <link rel="icon" type="image/svg+xml" href="/logo.svg" />
       </head>
-      <body className="min-h-screen bg-black text-[#f5f5f5] antialiased relative selection:bg-white selection:text-black">
+      <body className="min-h-screen w-full bg-black text-[#f5f5f5] antialiased relative selection:bg-white selection:text-black">
         {/* Ambient Top Light Beam */}
         <div className="linear-glow" />
         <div className="fixed inset-0 linear-grid pointer-events-none -z-10" />
 
-        <div className="relative max-w-3xl mx-auto px-6 py-12 sm:py-20">
+        <div className="relative w-full max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-16 box-border">
           {children}
         </div>
       </body>

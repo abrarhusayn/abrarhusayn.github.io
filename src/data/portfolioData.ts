@@ -42,7 +42,7 @@ export const DATA = {
   status: "Available for Q2 Projects & Full-time Roles",
   about:
     "I’m a backend developer specializing in Java, Spring Boot, Node.js, and Express.js. I build scalable, high-performance, and optimized backend solutions with a focus on clean architecture, reliability, and maintainability.",
-  email: "abrarhusayn@example.com",
+  email: "m.abrarhusayn@gmail.com",
   socials: {
     github: "https://github.com/abrarhusayn",
     twitter: "https://x.com/abrarhusayn",

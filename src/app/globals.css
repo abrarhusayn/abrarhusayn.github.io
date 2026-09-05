@@ -12,7 +12,7 @@
   --accent-white: #ffffff;
 }
 
-body {
+html, body {
   background-color: var(--bg);
   color: var(--text-primary);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -20,7 +20,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Linear-style razor grid */
+/* Linear-style razor grid with strict width constraints */
 .linear-grid {
   background-size: 40px 40px;
   background-image: 
@@ -29,13 +29,14 @@ body {
   mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 70%, transparent 100%);
 }
 
-/* Top linear glow line */
+/* Top linear glow line constrained to viewport */
 .linear-glow {
   position: absolute;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
@@ -46,17 +47,11 @@ body {
   color: #000000;
 }
 
-/* Custom razor scrollbar */
-::-webkit-scrollbar {
-  width: 5px;
+/* Hide horizontal scrollbar while preserving scroll functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
-::-webkit-scrollbar-track {
-  background: #000000;
-}
-::-webkit-scrollbar-thumb {
-  background: #222222;
-  border-radius: 2px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #333333;
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DATA } from "@/data/portfolioData";
 import { soundFx } from "@/lib/sound";
+import { GithubIcon, LinkedinIcon, TwitterIcon } from "@/components/SocialIcons";
 import {
   ArrowUpRight,
   Check,
@@ -16,7 +17,8 @@ import {
   Award,
   User,
   BookOpen,
-  Eye,
+  Layers,
+  Briefcase,
   FileText,
 } from "lucide-react";
 import confetti from "canvas-confetti";
@@ -25,7 +27,6 @@ export default function Home() {
   const [copied, setCopied] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [activeTab, setActiveTab] = useState<"projects" | "experience" | "resume" | "blogs">("projects");
-  const [showPdfViewer, setShowPdfViewer] = useState(false);
   const [imgError, setImgError] = useState(false);
 
   const toggleSound = () => {
@@ -38,7 +39,7 @@ export default function Home() {
     navigator.clipboard.writeText(DATA.email);
     setCopied(true);
     confetti({
-      particleCount: 40,
+      particleCount: 35,
       spread: 60,
       origin: { y: 0.8 },
       colors: ["#ffffff", "#888888", "#38bdf8", "#f97316"],
@@ -46,28 +47,35 @@ export default function Home() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const tabs = [
+    { key: "projects" as const, label: "Projects", icon: Layers, count: DATA.projects.length },
+    { key: "experience" as const, label: "Experience", icon: Briefcase, count: DATA.experiences.length },
+    { key: "resume" as const, label: "Resume", icon: FileText, count: "PDF" },
+    { key: "blogs" as const, label: "Blogs", icon: BookOpen, count: "Soon" },
+  ];
+
   return (
-    <div className="space-y-12 sm:space-y-16">
+    <div className="w-full space-y-8 sm:space-y-14 pb-8">
       {/* Precision Header & Status */}
       <motion.header
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="space-y-6"
+        className="w-full space-y-6"
       >
         {/* Top bar with SVG Logo, Availability & Sound */}
-        <div className="flex items-center justify-between font-mono text-xs text-neutral-400">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between font-mono text-xs text-neutral-400 w-full">
+          <div className="flex items-center gap-2.5 sm:gap-3">
             {/* Clean SVG Logo Emblem */}
             <a
               href="#"
               onClick={() => soundFx.playClick()}
               className="flex items-center gap-2 text-white font-medium group"
             >
-              <div className="h-8 w-8 rounded-lg overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
+              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
                 <img src="/logo.svg" alt="Abrar Logo" className="h-full w-full object-contain" />
               </div>
-              <span className="font-bold text-sm tracking-tight text-white group-hover:text-neutral-200">
+              <span className="font-bold text-xs sm:text-sm tracking-tight text-white group-hover:text-neutral-200">
                 {DATA.username}
                 <span className="text-neutral-500 font-normal">/dev</span>
               </span>
@@ -80,21 +88,21 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <button
               onClick={toggleSound}
               className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900/60 px-2.5 py-1 text-neutral-400 hover:border-neutral-700 hover:text-white transition-colors cursor-pointer"
             >
               {isMuted ? <VolumeX className="h-3 w-3" /> : <Volume2 className="h-3 w-3 text-emerald-400" />}
-              <span>{isMuted ? "Muted" : "Sound"}</span>
+              <span className="hidden sm:inline">{isMuted ? "Muted" : "Sound"}</span>
             </button>
           </div>
         </div>
 
-        {/* Hero Section: In Mobile -> Photo First, then Text. In Desktop -> Side-by-Side */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
+        {/* Hero Section */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10 w-full">
           
-          {/* Photo: Compact, Centered on mobile (order-1), Right-aligned on desktop (order-2) */}
+          {/* Photo: Compact, Centered on mobile */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -105,7 +113,7 @@ export default function Home() {
             {/* Ambient Glow Aura */}
             <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-orange-500/20 via-sky-500/20 to-emerald-500/20 blur-md group-hover:blur-lg transition-all duration-500 opacity-70 group-hover:opacity-100" />
 
-            <div className="relative w-40 sm:w-44 md:w-48 aspect-[3/4] rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-950 shadow-2xl flex items-center justify-center">
+            <div className="relative w-36 sm:w-44 md:w-48 aspect-[3/4] rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-950 shadow-2xl flex items-center justify-center">
               {!imgError && DATA.avatarUrl ? (
                 <img
                   src={DATA.avatarUrl}
@@ -136,7 +144,7 @@ export default function Home() {
           </motion.div>
 
           {/* Text & Actions Column */}
-          <div className="order-2 md:order-1 flex-1 space-y-4 text-center md:text-left">
+          <div className="order-2 md:order-1 flex-1 space-y-3 sm:space-y-4 text-center md:text-left w-full">
             <motion.h1
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
@@ -150,25 +158,25 @@ export default function Home() {
               {DATA.title} &middot; {DATA.location}
             </p>
 
-            <p className="text-sm sm:text-base text-neutral-300 leading-relaxed font-normal pt-1 max-w-xl mx-auto md:mx-0">
+            <p className="text-xs sm:text-sm md:text-base text-neutral-300 leading-relaxed font-normal pt-1 max-w-xl mx-auto md:mx-0">
               {DATA.about}
             </p>
 
-            {/* Action / Social Bar */}
+            {/* Action / Social Bar with Clean Icons */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
-              className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 pt-2 font-mono text-xs"
+              className="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-2 font-mono text-xs"
             >
               <button
                 onClick={copyEmail}
-                className="flex items-center gap-2 rounded-lg bg-white text-black px-3.5 py-2 font-medium hover:bg-neutral-200 transition-all cursor-pointer shadow-sm active:scale-95"
+                className="flex items-center gap-1.5 rounded-lg bg-white text-black px-3.5 py-2 font-medium hover:bg-neutral-200 transition-all cursor-pointer shadow-sm active:scale-95 text-xs"
               >
                 {copied ? (
                   <>
                     <Check className="h-3.5 w-3.5 text-emerald-600" />
-                    <span>Copied {DATA.email}</span>
+                    <span>Copied!</span>
                   </>
                 ) : (
                   <>
@@ -183,10 +191,11 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => soundFx.playClick()}
+                aria-label="GitHub"
                 className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-950 px-3 py-2 text-neutral-300 hover:border-neutral-700 hover:text-white transition-all active:scale-95"
               >
-                <span>GitHub</span>
-                <ArrowUpRight className="h-3 w-3 text-neutral-500" />
+                <GithubIcon className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">GitHub</span>
               </a>
 
               <a
@@ -194,10 +203,11 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => soundFx.playClick()}
+                aria-label="Twitter"
                 className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-950 px-3 py-2 text-neutral-300 hover:border-neutral-700 hover:text-white transition-all active:scale-95"
               >
-                <span>Twitter</span>
-                <ArrowUpRight className="h-3 w-3 text-neutral-500" />
+                <TwitterIcon className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Twitter</span>
               </a>
 
               <a
@@ -205,10 +215,11 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => soundFx.playClick()}
+                aria-label="LinkedIn"
                 className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-950 px-3 py-2 text-neutral-300 hover:border-neutral-700 hover:text-white transition-all active:scale-95"
               >
-                <span>LinkedIn</span>
-                <ArrowUpRight className="h-3 w-3 text-neutral-500" />
+                <LinkedinIcon className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">LinkedIn</span>
               </a>
             </motion.div>
           </div>
@@ -216,43 +227,47 @@ export default function Home() {
         </div>
       </motion.header>
 
-      {/* Razor Tab Switcher */}
-      <div className="flex items-center border-b border-neutral-900 font-mono text-xs overflow-x-auto scrollbar-none">
-        {[
-          { key: "projects", label: "Projects", count: DATA.projects.length },
-          { key: "experience", label: "Experience", count: DATA.experiences.length },
-          { key: "resume", label: "Resume & Education", count: "PDF" },
-          { key: "blogs", label: "Blogs", count: "Soon" },
-        ].map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => {
-              soundFx.playClick();
-              setActiveTab(tab.key as "projects" | "experience" | "resume" | "blogs");
-            }}
-            className={`relative pb-3 pr-6 font-medium transition-colors cursor-pointer flex items-center gap-2 shrink-0 ${
-              activeTab === tab.key ? "text-white" : "text-neutral-500 hover:text-neutral-300"
-            }`}
-          >
-            <span>{tab.label}</span>
-            <span
-              className={`rounded px-1.5 py-0.5 text-[10px] ${
-                tab.key === "blogs"
-                  ? "bg-orange-500/10 text-orange-400 border border-orange-500/20"
-                  : "bg-neutral-900 text-neutral-400"
-              }`}
-            >
-              {tab.count}
-            </span>
-            {activeTab === tab.key && (
-              <motion.div
-                layoutId="activeTabIndicator"
-                className="absolute bottom-0 left-0 right-6 h-0.5 bg-white"
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              />
-            )}
-          </button>
-        ))}
+      {/* Modern Sticky Navigation Tab Bar (Icon-Only on Mobile, Full on Desktop, Solid Top Pin) */}
+      <div className="sticky top-0 z-50 w-full bg-black/95 backdrop-blur-md border-b border-neutral-900 font-mono text-xs pt-3 pb-0 -mt-2">
+        <div className="grid grid-cols-4 sm:flex sm:items-center w-full gap-1 sm:gap-6">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => {
+                  soundFx.playClick();
+                  setActiveTab(tab.key);
+                }}
+                aria-label={tab.label}
+                className={`relative pb-3.5 pt-1.5 flex items-center justify-center sm:justify-start gap-2 font-medium transition-colors cursor-pointer w-full sm:w-auto ${
+                  activeTab === tab.key ? "text-white" : "text-neutral-500 hover:text-neutral-300"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Icon className="h-4 w-4" />
+                  <span className="hidden sm:inline text-xs">{tab.label}</span>
+                </div>
+                <span
+                  className={`hidden sm:inline-block rounded px-1.5 py-0.5 text-[10px] ${
+                    tab.key === "blogs"
+                      ? "bg-orange-500/10 text-orange-400 border border-orange-500/20"
+                      : "bg-neutral-900 text-neutral-400"
+                  }`}
+                >
+                  {tab.count}
+                </span>
+                {activeTab === tab.key && (
+                  <motion.div
+                    layoutId="activeTabIndicator"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
+                    transition={{ type: "spring", stiffness: 450, damping: 35 }}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Tab Content with Smooth Transitions */}
@@ -265,7 +280,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
-            className="space-y-4"
+            className="space-y-4 w-full"
           >
             {DATA.projects.map((project, index) => (
               <motion.article
@@ -274,16 +289,16 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.06 }}
                 whileHover={{ y: -2 }}
-                className="group rounded-xl border border-neutral-800/80 bg-neutral-950/60 p-5 transition-all hover:border-neutral-700 hover:bg-neutral-900/40"
+                className="group rounded-xl border border-neutral-800/80 bg-neutral-950/60 p-4 sm:p-5 transition-all hover:border-neutral-700 hover:bg-neutral-900/40 w-full"
               >
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 sm:gap-4 w-full">
                   <div className="space-y-1">
-                    <div className="flex items-center gap-2.5 flex-wrap">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="text-base font-semibold text-white group-hover:text-neutral-200 transition-colors">
                         {project.title}
                       </h3>
                       {project.metric && (
-                        <span className="font-mono text-[10px] text-emerald-400 bg-emerald-950/50 border border-emerald-800/40 px-2 py-0.5 rounded">
+                        <span className="font-mono text-[9px] sm:text-[10px] text-emerald-400 bg-emerald-950/50 border border-emerald-800/40 px-2 py-0.5 rounded">
                           {project.metric}
                         </span>
                       )}
@@ -293,7 +308,7 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-3 font-mono text-xs shrink-0">
+                  <div className="flex items-center gap-3 font-mono text-xs shrink-0 pt-1 sm:pt-0">
                     {project.link && (
                       <a
                         href={project.link}
@@ -321,15 +336,15 @@ export default function Home() {
                   </div>
                 </div>
 
-                <p className="text-sm text-neutral-400 mt-3 leading-relaxed">
+                <p className="text-xs sm:text-sm text-neutral-400 mt-2.5 sm:mt-3 leading-relaxed">
                   {project.description}
                 </p>
 
-                <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-neutral-900">
+                <div className="flex flex-wrap gap-1.5 mt-3 sm:mt-4 pt-3 border-t border-neutral-900">
                   {project.tech.map((t) => (
                     <span
                       key={t}
-                      className="font-mono text-[11px] text-neutral-400 bg-neutral-900/90 px-2 py-0.5 rounded border border-neutral-800/60"
+                      className="font-mono text-[10px] sm:text-[11px] text-neutral-400 bg-neutral-900/90 px-2 py-0.5 rounded border border-neutral-800/60"
                     >
                       {t}
                     </span>
@@ -348,27 +363,27 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
-            className="space-y-12"
+            className="space-y-8 sm:space-y-12 w-full"
           >
             {/* Work History */}
-            <section className="space-y-4">
+            <section className="space-y-4 w-full">
               {DATA.experiences.map((exp, index) => (
                 <motion.div
                   key={exp.company}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.08 }}
-                  className="rounded-xl border border-neutral-800/80 bg-neutral-950/60 p-5 space-y-3"
+                  className="rounded-xl border border-neutral-800/80 bg-neutral-950/60 p-4 sm:p-5 space-y-2.5 sm:space-y-3 w-full"
                 >
-                  <div className="flex items-start justify-between gap-2">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1">
                     <div>
                       <h3 className="text-sm font-semibold text-white">{exp.role}</h3>
                       <div className="font-mono text-xs text-neutral-400">{exp.company}</div>
                     </div>
-                    <span className="font-mono text-xs text-neutral-500">{exp.period}</span>
+                    <span className="font-mono text-[11px] sm:text-xs text-neutral-500">{exp.period}</span>
                   </div>
 
-                  <p className="text-sm text-neutral-400 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
                     {exp.description}
                   </p>
 
@@ -398,12 +413,12 @@ export default function Home() {
             </section>
 
             {/* Technical Tooling Grid */}
-            <section className="space-y-4">
+            <section className="space-y-4 w-full">
               <h2 className="font-mono text-xs font-semibold uppercase tracking-wider text-neutral-500">
                 Technical Capabilities
               </h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-full">
                 {DATA.skillCategories.map((group) => (
                   <div
                     key={group.category}
@@ -416,7 +431,7 @@ export default function Home() {
                       {group.skills.map((skill) => (
                         <span
                           key={skill}
-                          className="font-mono text-[11px] text-neutral-400 bg-neutral-900/60 px-2 py-0.5 rounded border border-neutral-800/40"
+                          className="font-mono text-[10px] sm:text-[11px] text-neutral-400 bg-neutral-900/60 px-2 py-0.5 rounded border border-neutral-800/40"
                         >
                           {skill}
                         </span>
@@ -429,7 +444,7 @@ export default function Home() {
           </motion.div>
         )}
 
-        {/* Tab 3: Interactive Resume & In-page PDF Viewer */}
+        {/* Tab 3: Interactive Resume & Education */}
         {activeTab === "resume" && (
           <motion.section
             key="resume"
@@ -437,76 +452,30 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
-            className="space-y-6"
+            className="space-y-6 w-full"
           >
-            {/* Top Resume Header Card */}
-            <div className="rounded-xl border border-neutral-800/80 bg-neutral-950/60 p-6 space-y-6">
+            <div className="rounded-xl border border-neutral-800/80 bg-neutral-950/60 p-5 sm:p-6 space-y-6 w-full">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 <div>
                   <span className="font-mono text-xs font-semibold text-neutral-400 uppercase tracking-wider block">
                     Summary
                   </span>
-                  <p className="text-sm text-neutral-300 mt-2 leading-relaxed max-w-xl">
+                  <p className="text-xs sm:text-sm text-neutral-300 mt-2 leading-relaxed max-w-xl">
                     {DATA.resume.summary}
                   </p>
                 </div>
 
-                {/* Dual Action: View In-Page / Open / Download PDF */}
-                <div className="flex items-center gap-2 shrink-0 font-mono text-xs">
-                  <button
-                    onClick={() => {
-                      soundFx.playClick();
-                      setShowPdfViewer(!showPdfViewer);
-                    }}
-                    className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-neutral-200 hover:border-neutral-700 hover:text-white transition-all cursor-pointer"
-                  >
-                    <Eye className="h-3.5 w-3.5 text-orange-400" />
-                    <span>{showPdfViewer ? "Hide Viewer" : "View PDF"}</span>
-                  </button>
-
-                  <a
-                    href={DATA.resume.pdfUrl}
-                    download="abrar_resume.pdf"
-                    onClick={() => soundFx.playSuccess()}
-                    className="flex items-center gap-1.5 rounded-lg bg-white text-black px-3.5 py-2 font-medium hover:bg-neutral-200 transition-all active:scale-95 shadow-sm"
-                  >
-                    <Download className="h-3.5 w-3.5" />
-                    <span>Download</span>
-                  </a>
-                </div>
+                <a
+                  href={DATA.resume.pdfUrl}
+                  download="abrar_resume.pdf"
+                  onClick={() => soundFx.playSuccess()}
+                  className="flex items-center justify-center gap-1.5 rounded-lg border border-neutral-700 bg-white text-black px-3.5 py-1.5 font-mono text-xs font-medium hover:bg-neutral-200 transition-all shrink-0 active:scale-95 shadow-sm w-fit"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  <span>Download PDF</span>
+                </a>
               </div>
 
-              {/* In-page Embedded PDF Viewer */}
-              {showPdfViewer && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="rounded-xl overflow-hidden border border-neutral-800 bg-neutral-900 mt-4"
-                >
-                  <div className="flex items-center justify-between px-4 py-2 bg-neutral-950 border-b border-neutral-800 font-mono text-xs text-neutral-400">
-                    <div className="flex items-center gap-2">
-                      <FileText className="h-3.5 w-3.5 text-orange-400" />
-                      <span>resume.pdf &middot; Preview</span>
-                    </div>
-                    <a
-                      href={DATA.resume.pdfUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-neutral-300 hover:text-white underline"
-                    >
-                      Open in new tab ↗
-                    </a>
-                  </div>
-                  <iframe
-                    src={DATA.resume.pdfUrl}
-                    className="w-full h-[600px] border-0"
-                    title="Abrar Resume PDF Preview"
-                  />
-                </motion.div>
-              )}
-
-              {/* Education & Certifications Matrix */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-neutral-900">
                 {/* Education */}
                 <div className="space-y-3">
@@ -516,9 +485,9 @@ export default function Home() {
                   </div>
                   {DATA.resume.education.map((edu) => (
                     <div key={edu.degree} className="space-y-0.5">
-                      <div className="text-sm font-medium text-white">{edu.degree}</div>
+                      <div className="text-xs sm:text-sm font-medium text-white">{edu.degree}</div>
                       <div className="font-mono text-xs text-neutral-400">{edu.institution}</div>
-                      <div className="font-mono text-[11px] text-neutral-500">
+                      <div className="font-mono text-[10px] sm:text-[11px] text-neutral-500">
                         {edu.period} &middot; {edu.location}
                       </div>
                     </div>
@@ -535,7 +504,7 @@ export default function Home() {
                     {DATA.resume.certifications.map((cert) => (
                       <div
                         key={cert.name}
-                        className="flex items-center justify-between font-mono text-xs"
+                        className="flex items-center justify-between font-mono text-[11px] sm:text-xs"
                       >
                         <span className="text-neutral-300">{cert.name}</span>
                         <span className="text-neutral-500">{cert.year}</span>
@@ -556,23 +525,23 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
-            className="rounded-xl border border-neutral-800/80 bg-neutral-950/60 p-12 text-center space-y-4"
+            className="rounded-xl border border-neutral-800/80 bg-neutral-950/60 p-8 sm:p-12 text-center space-y-4 w-full"
           >
-            <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl border border-orange-500/30 bg-orange-500/10 text-orange-400 mb-2">
-              <BookOpen className="h-6 w-6" />
+            <div className="inline-flex items-center justify-center h-10 w-10 sm:h-12 sm:w-12 rounded-xl border border-orange-500/30 bg-orange-500/10 text-orange-400 mb-1 sm:mb-2">
+              <BookOpen className="h-5 w-5 sm:h-6 sm:w-6" />
             </div>
 
             <div className="space-y-1.5 max-w-md mx-auto">
-              <div className="flex items-center justify-center gap-2 font-mono text-sm font-semibold text-white">
+              <div className="flex items-center justify-center gap-2 font-mono text-xs sm:text-sm font-semibold text-white">
                 <span>Technical Writing &amp; Notes</span>
                 <span className="h-1.5 w-1.5 rounded-full bg-orange-400 animate-pulse" />
               </div>
-              <p className="text-sm text-neutral-400">
+              <p className="text-xs sm:text-sm text-neutral-400">
                 Articles on Next.js architectures, distributed backends, self-hosting, and AI tooling are coming soon...
               </p>
             </div>
 
-            <div className="pt-2 font-mono text-xs text-neutral-500">
+            <div className="pt-2 font-mono text-[11px] sm:text-xs text-neutral-500">
               Stay tuned &middot; Check back soon
             </div>
           </motion.section>
@@ -580,7 +549,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* Razor Footer */}
-      <footer className="pt-8 border-t border-neutral-900 flex items-center justify-between font-mono text-xs text-neutral-500">
+      <footer className="pt-6 sm:pt-8 border-t border-neutral-900 flex items-center justify-between font-mono text-[11px] sm:text-xs text-neutral-500 w-full">
         <div>
           © {new Date().getFullYear()} {DATA.name} &middot; Precision Engineering
         </div>
