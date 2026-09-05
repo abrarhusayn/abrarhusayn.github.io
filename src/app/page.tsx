@@ -20,6 +20,8 @@ import {
   Layers,
   Briefcase,
   FileText,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
@@ -27,6 +29,7 @@ export default function Home() {
   const [copied, setCopied] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [activeTab, setActiveTab] = useState<"projects" | "experience" | "resume" | "blogs">("projects");
+  const [showResume, setShowResume] = useState(false);
   const [imgError, setImgError] = useState(false);
 
   const toggleSound = () => {
@@ -465,16 +468,63 @@ export default function Home() {
                   </p>
                 </div>
 
-                <a
-                  href={DATA.resume.pdfUrl}
-                  download="abrar_resume.pdf"
-                  onClick={() => soundFx.playSuccess()}
-                  className="flex items-center justify-center gap-1.5 rounded-lg border border-neutral-700 bg-white text-black px-3.5 py-1.5 font-mono text-xs font-medium hover:bg-neutral-200 transition-all shrink-0 active:scale-95 shadow-sm w-fit"
-                >
-                  <Download className="h-3.5 w-3.5" />
-                  <span>Download PDF</span>
-                </a>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => {
+                      soundFx.playClick();
+                      setShowResume(!showResume);
+                    }}
+                    className="flex items-center justify-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900 text-neutral-300 px-3.5 py-1.5 font-mono text-xs font-medium hover:border-neutral-700 hover:text-white transition-all shrink-0 active:scale-95 shadow-sm cursor-pointer"
+                  >
+                    {showResume ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                    <span>{showResume ? "Hide Resume" : "View Resume"}</span>
+                  </button>
+
+                  <a
+                    href={DATA.resume.pdfUrl}
+                    download="abrar_resume.pdf"
+                    onClick={() => soundFx.playSuccess()}
+                    className="flex items-center justify-center gap-1.5 rounded-lg border border-neutral-700 bg-white text-black px-3.5 py-1.5 font-mono text-xs font-medium hover:bg-neutral-200 transition-all shrink-0 active:scale-95 shadow-sm w-fit"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    <span>Download PDF</span>
+                  </a>
+                </div>
               </div>
+
+              {/* Collapsible Interactive PDF Resume Viewer */}
+              {showResume && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-3 pt-4 border-t border-neutral-900"
+                >
+                  <div className="flex items-center justify-between font-mono text-xs text-neutral-400">
+                    <span className="flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      Viewing /public/resume.pdf
+                    </span>
+                    <a
+                      href={DATA.resume.pdfUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-white transition-colors flex items-center gap-1 text-[11px]"
+                    >
+                      Open in new tab <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
+
+                  <div className="w-full h-[550px] sm:h-[700px] rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950">
+                    <iframe
+                      src={`${DATA.resume.pdfUrl}#toolbar=0&navpanes=0`}
+                      className="w-full h-full border-0"
+                      title="Abrar Resume"
+                    />
+                  </div>
+                </motion.div>
+              )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-neutral-900">
                 {/* Education */}
@@ -495,7 +545,7 @@ export default function Home() {
                 </div>
 
                 {/* Certifications */}
-                <div className="space-y-3">
+                {/* <div className="space-y-3">
                   <div className="flex items-center gap-2 font-mono text-xs font-semibold text-neutral-300 uppercase tracking-wider">
                     <Award className="h-4 w-4 text-neutral-400" />
                     <span>Certifications &amp; Focus</span>
@@ -511,7 +561,7 @@ export default function Home() {
                       </div>
                     ))}
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </motion.section>
