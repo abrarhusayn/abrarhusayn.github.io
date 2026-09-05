@@ -45,7 +45,7 @@ export const DATA = {
   email: "m.abrarhusayn@gmail.com",
   socials: {
     github: "https://github.com/abrarhusayn",
-    twitter: "https://x.com/abrarhusayn",
+    twitter: "https://x.com/_abrarhusayn",
     linkedin: "https://linkedin.com/in/abrarhusayn",
   },
   resume: {
