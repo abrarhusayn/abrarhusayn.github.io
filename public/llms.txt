@@ -1,0 +1,20 @@
+# Abrar - Full-Stack Engineer & Product Builder
+> Portfolio context for AI agents, LLMs, and crawlers.
+
+## Bio
+Abrar is a Full-Stack & Applied AI Engineer building high-performance web applications, distributed systems, and modern developer tooling.
+
+## Primary Tech Stack
+- Frontend: React 19, Next.js (App Router), TypeScript, Tailwind CSS, Framer Motion
+- Backend: Node.js, Bun, Python, FastAPI, PostgreSQL, Redis
+- DevOps: Docker, Cloudflare, GitHub Actions, Linux/VPS self-hosting
+
+## Key Projects
+- SubAgents Hub: Curated AI sub-agent prompts and Model Context Protocol (MCP) server directory.
+- RequestFlow Simulator: Interactive topology visualizer tracing requests through gateway, cache, and database layers.
+- ClipForge AI: Automated video transcription and multi-platform clip generation pipeline using Whisper and Remotion.
+- Is-A.Developer DNS: Automated GitOps subdomain provisioning with GitHub Actions and Cloudflare DNS.
+
+## Contact
+- Email: contact@example.com
+- Availability: Open to full-time engineering roles, high-impact freelance projects, and AI system design.
