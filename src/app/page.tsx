@@ -15,13 +15,17 @@ import {
   GraduationCap,
   Award,
   User,
+  BookOpen,
+  Eye,
+  FileText,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [activeTab, setActiveTab] = useState<"projects" | "experience" | "resume">("projects");
+  const [activeTab, setActiveTab] = useState<"projects" | "experience" | "resume" | "blogs">("projects");
+  const [showPdfViewer, setShowPdfViewer] = useState(false);
   const [imgError, setImgError] = useState(false);
 
   const toggleSound = () => {
@@ -51,11 +55,29 @@ export default function Home() {
         transition={{ duration: 0.4 }}
         className="space-y-6"
       >
-        {/* Top bar with Availability & Sound */}
+        {/* Top bar with SVG Logo, Availability & Sound */}
         <div className="flex items-center justify-between font-mono text-xs text-neutral-400">
-          <div className="flex items-center gap-2 text-white font-medium">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>{DATA.status}</span>
+          <div className="flex items-center gap-3">
+            {/* Clean SVG Logo Emblem */}
+            <a
+              href="#"
+              onClick={() => soundFx.playClick()}
+              className="flex items-center gap-2 text-white font-medium group"
+            >
+              <div className="h-8 w-8 rounded-lg overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
+                <img src="/logo.svg" alt="Abrar Logo" className="h-full w-full object-contain" />
+              </div>
+              <span className="font-bold text-sm tracking-tight text-white group-hover:text-neutral-200">
+                {DATA.username}
+                <span className="text-neutral-500 font-normal">/dev</span>
+              </span>
+            </a>
+
+            {/* Status Indicator */}
+            <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-neutral-800 text-neutral-300">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[11px]">{DATA.status}</span>
+            </div>
           </div>
 
           <div className="flex items-center gap-4">
@@ -69,7 +91,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Hero Section: Centered on mobile, aligned on desktop */}
+        {/* Hero Section: In Mobile -> Photo First, then Text. In Desktop -> Side-by-Side */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
           
           {/* Photo: Compact, Centered on mobile (order-1), Right-aligned on desktop (order-2) */}
@@ -113,7 +135,7 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* Text & Actions Column: Mobile Centered (text-center), Desktop Left-aligned (md:text-left) */}
+          {/* Text & Actions Column */}
           <div className="order-2 md:order-1 flex-1 space-y-4 text-center md:text-left">
             <motion.h1
               initial={{ opacity: 0, x: -10 }}
@@ -132,7 +154,7 @@ export default function Home() {
               {DATA.about}
             </p>
 
-            {/* Action / Social Bar: Centered on mobile, left on desktop */}
+            {/* Action / Social Bar */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -200,19 +222,26 @@ export default function Home() {
           { key: "projects", label: "Projects", count: DATA.projects.length },
           { key: "experience", label: "Experience", count: DATA.experiences.length },
           { key: "resume", label: "Resume & Education", count: "PDF" },
+          { key: "blogs", label: "Blogs", count: "Soon" },
         ].map((tab) => (
           <button
             key={tab.key}
             onClick={() => {
               soundFx.playClick();
-              setActiveTab(tab.key as "projects" | "experience" | "resume");
+              setActiveTab(tab.key as "projects" | "experience" | "resume" | "blogs");
             }}
             className={`relative pb-3 pr-6 font-medium transition-colors cursor-pointer flex items-center gap-2 shrink-0 ${
               activeTab === tab.key ? "text-white" : "text-neutral-500 hover:text-neutral-300"
             }`}
           >
             <span>{tab.label}</span>
-            <span className="rounded bg-neutral-900 px-1.5 py-0.5 text-[10px] text-neutral-400">
+            <span
+              className={`rounded px-1.5 py-0.5 text-[10px] ${
+                tab.key === "blogs"
+                  ? "bg-orange-500/10 text-orange-400 border border-orange-500/20"
+                  : "bg-neutral-900 text-neutral-400"
+              }`}
+            >
               {tab.count}
             </span>
             {activeTab === tab.key && (
@@ -400,7 +429,7 @@ export default function Home() {
           </motion.div>
         )}
 
-        {/* Tab 3: Interactive Resume */}
+        {/* Tab 3: Interactive Resume & In-page PDF Viewer */}
         {activeTab === "resume" && (
           <motion.section
             key="resume"
@@ -410,8 +439,9 @@ export default function Home() {
             transition={{ duration: 0.25 }}
             className="space-y-6"
           >
+            {/* Top Resume Header Card */}
             <div className="rounded-xl border border-neutral-800/80 bg-neutral-950/60 p-6 space-y-6">
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 <div>
                   <span className="font-mono text-xs font-semibold text-neutral-400 uppercase tracking-wider block">
                     Summary
@@ -421,16 +451,62 @@ export default function Home() {
                   </p>
                 </div>
 
-                <a
-                  href={DATA.resume.downloadUrl}
-                  onClick={() => soundFx.playSuccess()}
-                  className="flex items-center gap-1.5 rounded-lg border border-neutral-700 bg-white text-black px-3.5 py-1.5 font-mono text-xs font-medium hover:bg-neutral-200 transition-all shrink-0 active:scale-95"
-                >
-                  <Download className="h-3.5 w-3.5" />
-                  <span>PDF</span>
-                </a>
+                {/* Dual Action: View In-Page / Open / Download PDF */}
+                <div className="flex items-center gap-2 shrink-0 font-mono text-xs">
+                  <button
+                    onClick={() => {
+                      soundFx.playClick();
+                      setShowPdfViewer(!showPdfViewer);
+                    }}
+                    className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900 px-3.5 py-2 text-neutral-200 hover:border-neutral-700 hover:text-white transition-all cursor-pointer"
+                  >
+                    <Eye className="h-3.5 w-3.5 text-orange-400" />
+                    <span>{showPdfViewer ? "Hide Viewer" : "View PDF"}</span>
+                  </button>
+
+                  <a
+                    href={DATA.resume.pdfUrl}
+                    download="abrar_resume.pdf"
+                    onClick={() => soundFx.playSuccess()}
+                    className="flex items-center gap-1.5 rounded-lg bg-white text-black px-3.5 py-2 font-medium hover:bg-neutral-200 transition-all active:scale-95 shadow-sm"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    <span>Download</span>
+                  </a>
+                </div>
               </div>
 
+              {/* In-page Embedded PDF Viewer */}
+              {showPdfViewer && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="rounded-xl overflow-hidden border border-neutral-800 bg-neutral-900 mt-4"
+                >
+                  <div className="flex items-center justify-between px-4 py-2 bg-neutral-950 border-b border-neutral-800 font-mono text-xs text-neutral-400">
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-3.5 w-3.5 text-orange-400" />
+                      <span>resume.pdf &middot; Preview</span>
+                    </div>
+                    <a
+                      href={DATA.resume.pdfUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-neutral-300 hover:text-white underline"
+                    >
+                      Open in new tab ↗
+                    </a>
+                  </div>
+                  <iframe
+                    src={DATA.resume.pdfUrl}
+                    className="w-full h-[600px] border-0"
+                    title="Abrar Resume PDF Preview"
+                  />
+                </motion.div>
+              )}
+
+              {/* Education & Certifications Matrix */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-neutral-900">
                 {/* Education */}
                 <div className="space-y-3">
@@ -468,6 +544,36 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+            </div>
+          </motion.section>
+        )}
+
+        {/* Tab 4: Blogs (Coming Soon) */}
+        {activeTab === "blogs" && (
+          <motion.section
+            key="blogs"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
+            className="rounded-xl border border-neutral-800/80 bg-neutral-950/60 p-12 text-center space-y-4"
+          >
+            <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl border border-orange-500/30 bg-orange-500/10 text-orange-400 mb-2">
+              <BookOpen className="h-6 w-6" />
+            </div>
+
+            <div className="space-y-1.5 max-w-md mx-auto">
+              <div className="flex items-center justify-center gap-2 font-mono text-sm font-semibold text-white">
+                <span>Technical Writing &amp; Notes</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-orange-400 animate-pulse" />
+              </div>
+              <p className="text-sm text-neutral-400">
+                Articles on Next.js architectures, distributed backends, self-hosting, and AI tooling are coming soon...
+              </p>
+            </div>
+
+            <div className="pt-2 font-mono text-xs text-neutral-500">
+              Stay tuned &middot; Check back soon
             </div>
           </motion.section>
         )}

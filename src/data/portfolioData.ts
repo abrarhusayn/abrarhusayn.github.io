@@ -34,21 +34,22 @@ export interface Certification {
 
 export const DATA = {
   name: "Abrar",
-  handle: "@abrar",
-  title: "Full Stack Engineer & Product Builder",
+  handle: "@abrarhusayn",
+  username: "abrarhusayn",
+  title: "Software Engineer",
   location: "India • Remote Worldwide",
-  avatarUrl: "/abrar.jpg", // Reads from /public/abrar.jpg
+  avatarUrl: "/abrar.jpg",
   status: "Available for Q2 Projects & Full-time Roles",
   about:
-    "I design and build production-grade web apps, distributed systems, and modern developer tooling. I focus on combining polished frontend ergonomics (Next.js, TypeScript, Tailwind) with robust, high-performance backends (Node, Python, PostgreSQL, Redis).",
-  email: "contact@example.com",
+    "I’m a backend developer specializing in Java, Spring Boot, Node.js, and Express.js. I build scalable, high-performance, and optimized backend solutions with a focus on clean architecture, reliability, and maintainability.",
+  email: "abrarhusayn@example.com",
   socials: {
-    github: "https://github.com",
-    twitter: "https://x.com",
-    linkedin: "https://linkedin.com",
+    github: "https://github.com/abrarhusayn",
+    twitter: "https://x.com/abrarhusayn",
+    linkedin: "https://linkedin.com/in/abrarhusayn",
   },
   resume: {
-    downloadUrl: "#",
+    pdfUrl: "/resume.pdf", // Reads directly from public/resume.pdf
     summary:
       "Full-stack engineer with hands-on experience in distributed web services, modern React architectures, and automated media & AI pipelines.",
     education: [
@@ -95,7 +96,7 @@ export const DATA = {
       metric: "12k+ monthly devs",
       tech: ["Next.js", "TypeScript", "Tailwind CSS", "PostgreSQL", "Prisma"],
       link: "https://example.com",
-      github: "https://github.com",
+      github: "https://github.com/abrarhusayn",
       year: "2026",
       featured: true,
     },
@@ -107,7 +108,7 @@ export const DATA = {
       metric: "85% faster render",
       tech: ["TypeScript", "Bun", "Whisper", "FFmpeg", "Remotion"],
       link: "https://example.com",
-      github: "https://github.com",
+      github: "https://github.com/abrarhusayn",
       year: "2025",
       featured: true,
     },
@@ -119,7 +120,7 @@ export const DATA = {
       metric: "500+ active domains",
       tech: ["Next.js", "GitHub Actions", "Cloudflare DNS", "Docker"],
       link: "https://example.com",
-      github: "https://github.com",
+      github: "https://github.com/abrarhusayn",
       year: "2025",
       featured: false,
     },

@@ -2,11 +2,16 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Abrar — Full-Stack Engineer",
+  title: "Abrar (@abrarhusayn) — Full-Stack Engineer",
   description: "Crafting modern software with precision, speed, and clean systems design.",
-  authors: [{ name: "Abrar" }],
+  icons: {
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
+  },
+  authors: [{ name: "Abrar", url: "https://github.com/abrarhusayn" }],
   openGraph: {
-    title: "Abrar — Full-Stack Engineer",
+    title: "Abrar (@abrarhusayn) — Full-Stack Engineer",
     description: "Modern web software, distributed backends, and applied AI tools.",
     type: "website",
   },
@@ -19,6 +24,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark scroll-smooth">
+      <head>
+        <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+      </head>
       <body className="min-h-screen bg-black text-[#f5f5f5] antialiased relative selection:bg-white selection:text-black">
         {/* Ambient Top Light Beam */}
         <div className="linear-glow" />
